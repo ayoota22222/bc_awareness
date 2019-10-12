@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data>
+
         <record id="bc_partner_form" model="ir.ui.view">
             <field name="name">bc.partner.form</field>
             <field name="model">res.partner</field>
+            <field name="priority" eval="101"/>
             <field name="arch" type="xml">
                 <form string="Partners">
                     <sheet>
@@ -56,31 +58,12 @@
             </field>
         </record>
 
-        <record id="bc_partner_tree" model="ir.ui.view">
-            <field name="name">bc.partner.tree</field>
-            <field name="model">res.partner</field>
-            <field eval="8" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Contacts">
-                    <field name="display_name" string="Name"/>
-                    <field name="function" invisible="1"/>
-                    <field name="phone"/>
-                    <field name="email"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="is_company" invisible="1"/>
-                    <field name="country_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="active" invisible="1"/>
-                </tree>
-            </field>
-        </record>
         <record id="bc_partner_action" model="ir.actions.act_window">
             <field name="name">Bc Profile</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bc_partner','=',True)]</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="bc_partner_tree"/>
+            <field name="view_id" ref="bc_partner_form"/>
         </record>
 
         <menuitem id="bc_main_menu" name="Bc Awareness" sequence="1"/>
