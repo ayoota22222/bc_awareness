@@ -10,6 +10,10 @@ class BcAwarness(http.Controller):
         data = {}
         for field_name, field_value in kw.items():
             values[field_name] = field_value
+        if values['langauage'] == 'en':
+            values['lang'] = 'en_US'
+            # if values['avatar']:
+            #     values['image'] = values['avatar']
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
             partner = http.request.env['res.partner'].sudo().create(values)
@@ -19,6 +23,7 @@ class BcAwarness(http.Controller):
                 'password': values['password'],
                 'partner_id': partner.id
             })
+            # image_url =
             data = {
                 "success":"true",
                 "message":"User account has been created successfully, please check you email we sent to you verification link",
@@ -32,9 +37,9 @@ class BcAwarness(http.Controller):
                 "hieght":partner.height,
                 "mobile":partner.mobile,
                 "birth_date":partner.birth_date,
-                # "langauage":"en",
+                "langauage":"en",
                 "is_mobile_verified":"false",
-                    # #             "avatar": "http://localhost:3000/default_image.png"
+                # "avatar":"http://localhost:3000/default_image.png"
                     }}}
         else:
             data = {"success":"false",
@@ -43,4 +48,35 @@ class BcAwarness(http.Controller):
             "data":{ }}
 
         return json.dumps(data)
+
+
+    @http.route(['/rest_api/users/login'],type='http',auth='none',csrf=False,methods=['POST'])
+    def log_in(self, **kw):
+        data = {}
+        user = http.request.env['res.users'].sudo().search([('login','=',kw.get('email')),('password','=',kw.get('password'))])
+        partner = user.partner_id
+        if user:
+            data = {
+                "success": "true",
+                "message": "User account has been created successfully, please check you email we sent to you verification link",
+                "data": {"user": {
+                    "id": user.id,
+                    "name": partner.name,
+                    "partner_id": partner.id,
+                    "email": partner.email,
+                    "country_code": "00249",
+                    "weight": partner.weight,
+                    "hieght": partner.height,
+                    "mobile": partner.mobile,
+                    "birth_date": partner.birth_date,
+                    "langauage": "en",
+                    "is_mobile_verified": "false",
+                    # "avatar":"http://localhost:3000/default_image.png"
+                }}}
+        else:
+            data = {
+                "success":"false","message":"Invalid Credentials.","error_code":1107,"data":{}
+            }
+        return json.dumps(data)
+
 

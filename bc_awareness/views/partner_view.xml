@@ -24,6 +24,7 @@
                                 <field name="birth_date"/>
                                 <field name="weight"/>
                                 <field name="height"/>
+                                <field name="lang"/>
                                 <field name="phone" widget="phone"/>
                                 <field name="mobile" widget="phone"/>
                                 <field name="email" widget="email"/>
