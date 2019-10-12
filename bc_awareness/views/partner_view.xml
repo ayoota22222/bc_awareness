@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="bc_partner_form" model="ir.ui.view">
+            <field name="name">bc.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Partners">
+                    <sheet>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                        <div class="oe_title">
+                            <field name="company_type" widget="radio"
+                                   class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Personal Information">
+                                <field name="is_mobile_verified"/>
+                                <field name="birth_date"/>
+                                <field name="weight"/>
+                                <field name="height"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="email" widget="email"/>
+                                <field name="password" widget="password"/>
+                                <field name="function" placeholder="Job Title"/>
+
+                                <field name="customer" invisible="1"/>
+                                <field name="supplier" invisible="1"/>
+                            </group>
+                            <group string="Address Information">
+                                <label for="street" string="Address"/>
+                                <div class="o_address_format">
+                                    <field name="street" placeholder="Street..." class="o_address_street"
+                                   />
+                                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                      />
+                                    <field name="city" placeholder="City" class="o_address_city"
+                                 />
+                                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
+                                    />
+                                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                          />
+                                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                           />
+                                </div>
+
+                            </group>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="bc_partner_tree" model="ir.ui.view">
+            <field name="name">bc.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="display_name" string="Name"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="bc_partner_action" model="ir.actions.act_window">
+            <field name="name">Bc Profile</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('bc_partner','=',True)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bc_partner_tree"/>
+        </record>
+
+        <menuitem id="bc_main_menu" name="Bc Awareness" sequence="1"/>
+        <menuitem id="bc_profile_menu" name="Bc Profile" sequence="1"  parent="bc_main_menu" action="bc_partner_action"/>
+    </data>
+</odoo>
