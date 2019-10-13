@@ -79,4 +79,16 @@ class BcAwarness(http.Controller):
             }
         return json.dumps(data)
 
+    @http.route(['/rest_api/users/reset'],type='http',auth='none',csrf=False,methods=['POST'])
+    def reset_email(self,**kw):
+        user = http.request.env['res.users'].sudo().search([('login','=',kw.get('email'))])
+        if user:
+            user.sudo().action_reset_password()
+            return json.dumps({"success":"true","message":"A verificaction link has been sent to you email account",
+                               "data":{"user":{"id":user.id,}}})
+        else:
+            return json.dumps({"success": "false","message":"Not Found.","error_code":1105,"data":{} })
+
+
+
 

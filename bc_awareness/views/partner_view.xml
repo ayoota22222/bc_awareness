@@ -2,12 +2,12 @@
 <odoo>
     <data>
 
-        <record id="bc_partner_form" model="ir.ui.view">
+        <record id="bc_partner_form2" model="ir.ui.view">
             <field name="name">bc.partner.form</field>
             <field name="model">res.partner</field>
             <field name="priority" eval="101"/>
             <field name="arch" type="xml">
-                <form string="Partners">
+                <form>
                     <sheet>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
                         <div class="oe_title">
@@ -30,7 +30,6 @@
                                 <field name="email" widget="email"/>
                                 <field name="password" widget="password"/>
                                 <field name="function" placeholder="Job Title"/>
-
                                 <field name="customer" invisible="1"/>
                                 <field name="supplier" invisible="1"/>
                             </group>
@@ -64,7 +63,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="bc_partner_form"/>
+            <field name="view_id" ref="bc_partner_form2"/>
         </record>
 
         <menuitem id="bc_main_menu" name="Bc Awareness" sequence="1"/>
