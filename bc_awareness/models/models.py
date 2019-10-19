@@ -6,11 +6,14 @@ from odoo import models, fields, api
 
 class BcAwarenessMedia(models.Model):
     _name = 'bc.awareness.media'
+    _rec_name = 'title'
 
-    name = fields.Char(string='Name', required=True)
+    title = fields.Char(string='Title', required=True)
     active = fields.Boolean(string='Active', default=True)
     type = fields.Char(string='Type')
-    attachment = fields.Binary(string='Attachment', required=True)
+    addons = fields.Binary(string='Addons', required=True)
+    content = fields.Text(string="Content")
+
 
 
 class BcAwarenessSelf(models.Model):

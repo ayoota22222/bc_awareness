@@ -8,7 +8,7 @@
     'description': "BC Awareness",
     'license':'LGPL-3',
     'data': [
-    'views/partner_view.xml',
+    'views/bc_awareness_view.xml',
     ],
     'demo': [],
     'depends': [],
