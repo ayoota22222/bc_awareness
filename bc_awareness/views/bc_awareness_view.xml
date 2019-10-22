@@ -74,27 +74,27 @@
             <field name="name">Bc Profile</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('bc_partner','=',True)]</field>
-            <field name="view_id" ref="bc_partner_tree"></field>
-<!--            <field name="form_view_id" ref="bc_partner_form2"/>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="domain">[('bc_partner','=',True)]</field>-->
+            <!--            <field name="view_id" ref="bc_partner_tree"></field>-->
+            <!--            <field name="form_view_id" ref="bc_partner_form2"/>-->
         </record>
-<!--                <record id="bc_form_partner_action" model="ir.actions.act_window.view">-->
-<!--                    <field name="name">Bc Profile</field>-->
-<!--                    <field name="res_model">res.partner</field>-->
-<!--                    <field name="view_mode">form</field>-->
-<!--                            <field eval="15" name="sequence"/>-->
-<!--                    <field name="view_id" ref="bc_partner_form2"/>-->
-<!--                    <field name="act_window_id" ref="bc_partner_action"/>-->
-<!--                </record>-->
-<!--                <record id="bc_tree_partner_action" model="ir.actions.act_window.view">-->
-<!--                    <field name="name">Bc Profile</field>-->
-<!--                    <field name="res_model">res.partner</field>-->
-<!--                            <field eval="15" name="sequence"/>-->
-<!--                    <field name="view_mode">tree</field>-->
-<!--                    <field name="view_id" ref="bc_partner_tree"/>-->
-<!--                    <field name="act_window_id" ref="bc_partner_action"/>-->
-<!--                </record>-->
+        <record id="bc_form_partner_action" model="ir.actions.act_window.view">
+            <field name="name">Bc Profile</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">form</field>
+            <field eval="1" name="sequence"/>
+            <field name="view_id" ref="bc_partner_form2"/>
+            <field name="act_window_id" ref="bc_partner_action"/>
+        </record>
+        <record id="bc_tree_partner_action" model="ir.actions.act_window.view">
+            <field name="name">Bc Profile</field>
+            <field name="res_model">res.partner</field>
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bc_partner_tree"/>
+            <field name="act_window_id" ref="bc_partner_action"/>
+        </record>
 
 
         <menuitem id="bc_main_menu" name="Bc Awareness" sequence="1"/>
@@ -153,6 +153,8 @@
                             <field name="type"/>
                             <field name="content"/>
                             <field name="addons"/>
+                            <field name="url"/>
+                            <field name="addons_attache"/>
                         </group>
                     </sheet>
                 </form>

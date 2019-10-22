@@ -93,18 +93,17 @@ class BcAwarness(http.Controller):
         else:
             return json.dumps({"success": "false","message":"Not Found.","error_code":1105,"data":{} })
 
-    @http.route(['/rest_api/users/<model("res.users"):id'], type='http', auth='none', csrf=False, methods=['PUT'])
+
+    @http.route(['/rest_api/users/<string:id>'], type='http', auth='none', csrf=False, methods=['PUT'])
     def get_profile(self,id,**kw):
-        id = request.env['res.users']
-        print("dddddddddddddddddddddd",id)
-        user = http.request.env['res.users'].sudo().search([('id','=',kw.get('id'))])
+        print("ddddddddddddddddddddddfff",id,kw.items())
+        user = http.request.env['res.users'].sudo().search([('id','=',id)])
+        print("ddddddddddddddddddddd",user)
         if user:
             partner = user.partner_id
             values = {}
             for field_name, field_value in kw.items():
                 values[field_name] = field_value
-            if values['langauage'] and values['langauage'] == 'en':
-                values['lang'] = 'en_US'
             record = http.request.env['res.partner'].sudo().search([('id', '=',partner.id)])
             record.sudo().write(values)
             data = {
@@ -124,12 +123,13 @@ class BcAwarness(http.Controller):
         else:
             return json.dumps({"success": "false", "message": "Not Found.", "error_code": 1105, "data": {}})
 
-    @http.route(['/rest_api/users'], type='http', auth='none', csrf=False, methods=['PUT'])
-    def get_profile(self, **kw):
-        user = http.request.env['res.users'].sudo().search([('id','=',kw.get('id'))])
+    @http.route(['/rest_api/users/<string:id>/image'], type='http', auth='none', csrf=False, methods=['PUT'])
+    def get_profile(self, id,**kw):
+        print("ssssssssssssssss",kw.items())
+        user = http.request.env['res.users'].sudo().search([('id','=',id)])
         if user:
             partner = user.partner_id
-            partner.sudo().write({'image':base64.encodebytes(kw.get('avatar').read())})
+            partner.sudo().write({'image':base64.encodebytes(kw.get('image').read())})
             data = {
                 "success": "true",
                 "message": "User information has been updated successfully",
@@ -141,21 +141,11 @@ class BcAwarness(http.Controller):
         else:
             return json.dumps({"success": "false", "message": "Invalid image format.", "error_code": 1105, "data": {}})
 
-    http.route(['/rest_api/users/<model("res.users"):id'], type='http', auth='none', csrf=False, methods=['GET'])
-
-    def get_info(self,**kw):
-        id = request.env['res.users']
-        print("dddddddddddddddddddddd", id)
-        user = http.request.env['res.users'].sudo().search([('id', '=', kw.get('id'))])
+    @http.route(['/rest_api/users/<string:id>'], type='http', auth='none', csrf=False, methods=['GET'])
+    def get_info(self,id,**kw):
+        user = http.request.env['res.users'].sudo().search([('id', '=', id)])
         if user:
             partner = user.partner_id
-            values = {}
-            for field_name, field_value in kw.items():
-                values[field_name] = field_value
-            if values['langauage'] and values['langauage'] == 'en':
-                values['lang'] = 'en_US'
-            record = http.request.env['res.partner'].sudo().search([('id', '=', partner.id)])
-            record.sudo().write(values)
             data = {
                 "success": "true",
                 "message": "User information has been updated successfully",
@@ -172,6 +162,7 @@ class BcAwarness(http.Controller):
             return json.dumps(data)
         else:
             return json.dumps({"success": "false", "message": "Not Found.", "error_code": 1105, "data": {}})
+    #
 
     @http.route(['/rest_api/mammograms'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_mammograms(self, **kw):
@@ -187,8 +178,9 @@ class BcAwarness(http.Controller):
             return json.dumps({"success":"true",
                                "message":"Data found","data":{"mammograms":li}})
 
+
     @http.route(['/rest_api/features'], type='http', auth='none', csrf=False, methods=['GET'])
-    def get_mammograms(self, **kw):
+    def get_features(self, **kw):
         record = http.request.env['bc.awareness.media'].sudo().search([('id', '!=', False)])
         print("dddddddddddddddddddd",record)
         if record:
@@ -202,15 +194,5 @@ class BcAwarness(http.Controller):
                 }
                 li.append(media)
             return json.dumps({"success":"true","message":"Data found","data":{"features":li}})
-
-
-
-
-
-
-
-
-
-
 
 
