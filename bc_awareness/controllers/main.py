@@ -20,6 +20,7 @@ class BcAwarness(http.Controller):
             values['image'] = base64.encodebytes( values['avatar'].read())
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
+            values['bc_partner'] = True
             partner = http.request.env['res.partner'].sudo().create(values)
             user = http.request.env['res.users'].sudo().create({
                 'name': values['name'],
@@ -27,7 +28,6 @@ class BcAwarness(http.Controller):
                 'password': values['password'],
                 'partner_id': partner.id
             })
-            # image_url =
             data = {
                 "success":"true",
                 "message":"User account has been created successfully, please check you email we sent to you verification link",
@@ -43,7 +43,7 @@ class BcAwarness(http.Controller):
                     "birth_date":partner.birth_date,
                     "langauage":"en",
                     "is_mobile_verified":"false",
-                    # "avatar":"http://localhost:3000/default_image.png"
+                    "avatar":partner.url,
                 }}}
         else:
             data = {"success":"false",
@@ -75,7 +75,7 @@ class BcAwarness(http.Controller):
                     "birth_date": partner.birth_date,
                     "langauage": "en",
                     "is_mobile_verified": "false",
-                    # "avatar":"http://localhost:3000/default_image.png"
+                    "avatar":partner.url
                 }}}
         else:
             data = {
@@ -135,7 +135,7 @@ class BcAwarness(http.Controller):
                 "message": "User information has been updated successfully",
                 "data": {"user": {
                     "id": user.id,
-                    # "avatar": partner.name,
+                    "avatar": partner.url,
                 }}}
             return json.dumps(data)
         else:
@@ -171,8 +171,7 @@ class BcAwarness(http.Controller):
             li = []
             for rec in record:
                 mono = {
-                    "id":rec.id,"name":rec.name,"address":rec.address,"city":rec.city,"state":rec.state,
-                    #                 "avatar":""
+                    "id":rec.id,"name":rec.name,"address":rec.address,"city":rec.city,"state":rec.state,"avatar":rec.url
                 }
                 li.append(mono)
             return json.dumps({"success":"true",
@@ -190,7 +189,7 @@ class BcAwarness(http.Controller):
                     "id":rec.id,
                     "content":rec.content,"title":rec.title,
                     "type":rec.type,
-                    "addons":[]
+                    "addons":rec.url,
                 }
                 li.append(media)
             return json.dumps({"success":"true","message":"Data found","data":{"features":li}})

@@ -45,7 +45,7 @@ class BcAwarenessSelf(models.Model):
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    bc_partner = fields.Boolean(string="BC Partner",default=True)
+    bc_partner = fields.Boolean(string="BC Partner")
     is_mobile_verified = fields.Boolean(string="Mobile Verified")
     weight = fields.Float(string="Weight")
     height = fields.Float(string="Height")
