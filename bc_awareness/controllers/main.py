@@ -16,7 +16,7 @@ class BcAwarness(http.Controller):
             values[field_name] = field_value
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
-            values['bc_partner'] = True
+            # values['bc_partner'] = True
             partner = http.request.env['res.partner'].sudo().create(values)
             user = http.request.env['res.users'].sudo().create({
                 'name': values['name'],
