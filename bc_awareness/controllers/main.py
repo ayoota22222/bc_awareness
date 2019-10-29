@@ -14,10 +14,6 @@ class BcAwarness(http.Controller):
         data = {}
         for field_name, field_value in kw.items():
             values[field_name] = field_value
-        if values['langauage'] and values['langauage'] == 'en':
-            values['lang'] = 'en_US'
-        if values['avatar']:
-            values['image'] = base64.encodebytes( values['avatar'].read())
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
             values['bc_partner'] = True
