@@ -1,13 +1,12 @@
 # -*- encoding: utf-8 -*-
+
 import json
 from odoo import fields, http, SUPERUSER_ID
 import base64
 from odoo.http import request
 
-
-
-
 class BcAwarness(http.Controller):
+
     @http.route(['/rest_api/users/register'],type='http',auth='none',csrf=False,methods=['POST'])
     def save_registration(self, **kw):
         values = {}
@@ -49,7 +48,6 @@ class BcAwarness(http.Controller):
 
         return json.dumps(data)
 
-
     @http.route(['/rest_api/users/login'],type='http',auth='none',csrf=False,methods=['POST'])
     def log_in(self, **kw):
         data = {}
@@ -89,12 +87,9 @@ class BcAwarness(http.Controller):
         else:
             return json.dumps({"success": "false","message":"Not Found.","error_code":1105,"data":{} })
 
-
     @http.route(['/rest_api/users/<string:id>'], type='http', auth='none', csrf=False, methods=['PUT'])
     def get_profile(self,id,**kw):
-        print("ddddddddddddddddddddddfff",id,kw.items())
         user = http.request.env['res.users'].sudo().search([('id','=',id)])
-        print("ddddddddddddddddddddd",user)
         if user:
             partner = user.partner_id
             values = {}
@@ -117,11 +112,10 @@ class BcAwarness(http.Controller):
                 }}}
             return json.dumps(data)
         else:
-            return json.dumps({"success": "false", "message": "Not Found.", "error_code": 1105, "data": {}})
+            return json.dumps({"success": "false", "message": "Not*** Found.", "error_code": 1105, "data": {}})
 
     @http.route(['/rest_api/users/<string:id>/image'], type='http', auth='none', csrf=False, methods=['PUT'])
     def get_profile(self, id,**kw):
-        print("ssssssssssssssss",kw.items())
         user = http.request.env['res.users'].sudo().search([('id','=',id)])
         if user:
             partner = user.partner_id
@@ -158,7 +152,6 @@ class BcAwarness(http.Controller):
             return json.dumps(data)
         else:
             return json.dumps({"success": "false", "message": "Not Found.", "error_code": 1105, "data": {}})
-    #
 
     @http.route(['/rest_api/mammograms'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_mammograms(self, **kw):
@@ -173,11 +166,10 @@ class BcAwarness(http.Controller):
             return json.dumps({"success":"true",
                                "message":"Data found","data":{"mammograms":li}})
 
-
     @http.route(['/rest_api/features'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_features(self, **kw):
         record = http.request.env['bc.awareness.media'].sudo().search([('id', '!=', False)])
-        print("dddddddddddddddddddd",record)
+        #print("dddddddddddddddddddd",record)
         if record:
             li = []
             for rec in record:
@@ -190,4 +182,106 @@ class BcAwarness(http.Controller):
                 li.append(media)
             return json.dumps({"success":"true","message":"Data found","data":{"features":li}})
 
+    @http.route(['/rest_api/users/<string:user_id>/reminders'], type='http', auth='none', csrf=False, methods=['POST'])
+    def set_check_plan(self, **kw):
+        """Function TO Add User Self Check Plan"""
 
+        #c= datetime.strptime(kw['date'], '%Y-%m-%d')
+        check_plan = http.request.env['bc.self.check.plan'].sudo().create(
+            {
+                'user_id': int(kw['user_id']),
+                'date': fields.Date.from_string(kw['date']),
+                'time': kw['time'],
+                'period': int(kw['period']),
+                'cycle': int(kw['cycle']),
+            })
+        if check_plan:
+            data = {
+                "success": "true",
+                "message": "Scheduler created successfully",
+                "data": {
+                    "scheduler": {
+                        'id': check_plan.user_id.id,
+                        'date': fields.Date.to_string(check_plan.date),
+                        'time': check_plan.time,
+                        'period': check_plan.period,
+                        'cycle': check_plan.cycle,
+                    }
+                }
+            }
+            return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/shedulers'], type='http', auth='none', csrf=False, methods=['GET'])
+    def get_check_plan(self, **kw):
+        """Function TO Return User Self Check Plans"""
+
+        plans = http.request.env['bc.self.check.plan'].sudo().search([('user_id', '=', int(kw['user_id']))])
+        if plans:
+            plns = []
+            for plan in plans:
+                plns.append(
+                    {
+                        'id': plan.id,
+                        'date': fields.Date.to_string(plan.date),
+                        'time': plan.time,
+                        'period': plan.period,
+                        'cycle': plan.cycle,
+                    }
+                )
+            data = {
+                "success": "true",
+                "message": "Data found",
+                "data": {
+                    "schedulers": plns,
+                }
+            }
+        else:
+            data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+            }
+        return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/reminders/<string:plan_id>'], type='http', auth='none', csrf=False, methods=['PUT'])
+    def update_check_plan(self, **kw):
+        """Function TO Write User Self Check Plan"""
+
+        plan = http.request.env['bc.self.check.plan'].sudo().search([('user_id', '=', int(kw['user_id'])),
+                                                                     ('id', '=', int(kw['plan_id']))])
+        if plan:
+            plan.sudo().write({
+                'date': fields.Date.from_string(kw['date']),
+                'time': kw['time'],
+                'period': int(kw['period']),
+                'cycle': int(kw['cycle']),
+            })
+            data = {
+                "success": "true",
+                "message": "Scheduler updated successfully",
+                "data": {
+                    "scheduler": {
+                        'id': plan.id,
+                        'date': fields.Date.to_string(plan.date),
+                        'time': plan.time,
+                        'period': plan.period,
+                        'cycle': plan.cycle,
+                    }
+                }
+            }
+            return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/reminders/<string:plan_id>'], type='http', auth='none', csrf=False, methods=['DELETE'])
+    def unlink_check_plan(self, **kw):
+        """Function TO Delete User Self Check Plan"""
+        plan = http.request.env['bc.self.check.plan'].sudo().search([('user_id', '=', int(kw['user_id'])),
+                                                                     ('id', '=', int(kw['plan_id']))])
+        if plan:
+            plan.sudo().unlink()
+            data = {
+                "success": "true",
+                "message": "Scheduler deleted successfully",
+                "data": {}
+                }
+            return json.dumps(data)

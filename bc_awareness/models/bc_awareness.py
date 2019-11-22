@@ -32,15 +32,14 @@ class BcAwarenessMedia(models.Model):
         self.addons_attache = new_attachment.id
         self.url = url_base+"/web/content/%s"%(self.addons_attache.id)
 
-
-
-
-class BcAwarenessSelf(models.Model):
-    _name = 'bc.awareness.self.check.plan'
+class BcSelfCheckPlan(models.Model):
+    _name = 'bc.self.check.plan'
 
     user_id = fields.Many2one('res.users', string='User', copy=False)
     date = fields.Date(string='Date')
-    time = fields.Float(string="Time")
+    time = fields.Char(string="Time")#fields.Float(string="Time")
+    period = fields.Integer(string="Period")
+    cycle = fields.Integer(string="Cycle")
 
 class Partner(models.Model):
     _inherit = 'res.partner'
@@ -97,8 +96,6 @@ class BcMammogram(models.Model):
         })
         self.addons_attache = new_attachment.id
         self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
-
-
 
 
 
