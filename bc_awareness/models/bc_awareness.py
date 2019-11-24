@@ -98,4 +98,25 @@ class BcMammogram(models.Model):
         self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
 
 
+class BcParameters(models.Model):
+    _name = 'bc.parameters'
 
+    key = fields.Char(string="Key")
+    description = fields.Char(string="Description")
+    value = fields.Char(string="Value")
+
+
+class BcQuestions(models.Model):
+    _name = 'bc.questions'
+
+    key = fields.Char(string="Key")
+    text = fields.Char(string="Text")
+
+
+class BcResults(models.Model):
+    _name = 'bc.results'
+
+    user_id = fields.Many2one('res.users', string="User")
+    date = fields.Date(string='Date')
+    time = fields.Char(string="Time")
+    question_ids = fields.Many2many('bc.questions', string='Questions')

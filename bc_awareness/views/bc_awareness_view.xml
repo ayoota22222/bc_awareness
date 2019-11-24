@@ -167,5 +167,93 @@
         </record>
 
         <menuitem id="bc_media_menu" name="Bc Media" sequence="3"  parent="bc_main_menu" action="bc_media_action"/>
+
+        <!--Result -->
+        <record id="bc_result_form" model="ir.ui.view">
+            <field name="name">bc.result.form</field>
+            <field name="model">bc.results</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="time"/>
+                        </group>
+                        <notebook>
+                            <page string="Questions">
+                                <group>
+                                    <field name="question_ids" nolabel="1">
+                                        <tree string="Questions" editable="bottom">
+                                            <field name="key"/>
+                                            <field name="text"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="bc_result_tree" model="ir.ui.view">
+            <field name="name">bc.result.tree</field>
+            <field name="model">bc.results</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bc_result_action" model="ir.actions.act_window">
+            <field name="name">Bc Result</field>
+            <field name="res_model">bc.results</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bc_result_tree"/>
+        </record>
+
+        <menuitem id="bc_result_menu" name="Bc Result" sequence="2"  parent="bc_main_menu" action="bc_result_action"/>
+
+
+        <!--parameters-->
+        <record id="bc_parameters_form" model="ir.ui.view">
+            <field name="name">bc.parameters.form</field>
+            <field name="model">bc.parameters</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="key"/>
+                            <field name="description"/>
+                            <field name="value"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="bc_parameters_tree" model="ir.ui.view">
+            <field name="name">bc.parameters.tree</field>
+            <field name="model">bc.parameters</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="key"/>
+                    <field name="description"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bc_parameters_action" model="ir.actions.act_window">
+            <field name="name">Bc Parameters</field>
+            <field name="res_model">bc.parameters</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bc_parameters_tree"/>
+        </record>
+
+        <menuitem id="bc_parameters_menu" name="Bc Parameters" sequence="2"  parent="bc_main_menu" action="bc_parameters_action"/>
     </data>
 </odoo>
