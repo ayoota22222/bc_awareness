@@ -183,7 +183,7 @@
                         <notebook>
                             <page string="Questions">
                                 <group>
-                                    <field name="question_ids" nolabel="1">
+                                    <field name="questions" nolabel="1">
                                         <tree string="Questions" editable="bottom">
                                             <field name="key"/>
                                             <field name="text"/>

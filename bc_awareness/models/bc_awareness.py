@@ -119,4 +119,4 @@ class BcResults(models.Model):
     user_id = fields.Many2one('res.users', string="User")
     date = fields.Date(string='Date')
     time = fields.Char(string="Time")
-    question_ids = fields.Many2many('bc.questions', string='Questions')
+    questions = fields.Many2many('bc.questions', string='Questions')

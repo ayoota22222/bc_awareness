@@ -352,9 +352,17 @@ class BcAwarness(http.Controller):
     @http.route(['/rest_api/users/<string:user_id>/results'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_result(self, **kw):
         """Function TO Return User Self result"""
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>hello")
+        quest = []
         results = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id']))])
         if results:
+            for question in results.questions:
+                quest.append(
+                    {
+                        'id': question.id,
+                        'text': question.text,
+                        'key': question.key,
+                    }
+                )
             reslt = []
             for result in results:
                 reslt.append(
@@ -363,7 +371,7 @@ class BcAwarness(http.Controller):
                         'userId': result.user_id.id,
                         'date': fields.Date.to_string(result.date),
                         'time': result.time,
-                        'questions': result.questions,
+                        'questions': quest,
                     }
                 )
             data = {
@@ -413,12 +421,12 @@ class BcAwarness(http.Controller):
         """Function TO Write User Self result"""
 
         result = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id'])),
-                                                                     ('id', '=', int(kw['plan_id']))])
+                                                                     ('id', '=', int(kw['result_id']))])
         if result:
             result.sudo().write({
                 'date': fields.Date.from_string(kw['date']),
                 'time': kw['time'],
-                'questions': int(kw['period']),
+                # 'questions': int(kw['period']),
             })
             data = {
                 "success": "true",
@@ -429,7 +437,7 @@ class BcAwarness(http.Controller):
                         'userId': result.user_id.id,
                         'date': fields.Date.to_string(result.date),
                         'time': result.time,
-                        'questions': result.question_ids,
+                        # 'questions': result.question_ids,
                     }
                 }
             }
