@@ -382,39 +382,6 @@ class BcAwarness(http.Controller):
             }
         return json.dumps(data)
 
-    @http.route(['/rest_api/users/<string:user_id>/results'], type='http', auth='none', csrf=False, methods=['GET'])
-    def get_result(self, **kw):
-        """Function TO Return User Self result"""
-
-        results = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id']))])
-        if results:
-            reslt = []
-            for result in results:
-                reslt.append(
-                    {
-                        'id': result.id,
-                        'userId': result.user_id.id,
-                        'date': fields.Date.to_string(result.date),
-                        'time': result.time,
-                        'questions': result.questions,
-                    }
-                )
-            data = {
-                "success": "true",
-                "message": "Data found",
-                "data": {
-                    "results": reslt,
-                }
-            }
-        else:
-            data = {
-                "success": "false",
-                "message": "Data not found",
-                "error_code": 1105,
-                "data": {}
-            }
-        return json.dumps(data)
-
     @http.route(['/rest_api/users/<string:user_id>/results'],type='http',auth='none',csrf=False,methods=['POST'])
     def save_result(self, **kw):
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>hello iam new result")
