@@ -287,9 +287,8 @@ class BcAwarness(http.Controller):
             return json.dumps(data)
 
     @http.route(['/rest_api/questions/'], type='http', auth='none', csrf=False, methods=['GET'])
-    def get_parameters(self, **kw):
+    def get_questions(self, **kw):
         """Function TO Return questions"""
-
         questions = http.request.env['bc.questions'].sudo().search([('id', '!=', False)])
         if questions:
             quest = []
@@ -363,7 +362,7 @@ class BcAwarness(http.Controller):
                         'userId': result.user_id.id,
                         'date': fields.Date.to_string(result.date),
                         'time': result.time,
-                        'questions': result.questions,
+                        'questions': result.question_ids,
                     }
                 )
             data = {
@@ -396,7 +395,7 @@ class BcAwarness(http.Controller):
                         'userId': result.user_id.id,
                         'date': fields.Date.to_string(result.date),
                         'time': result.time,
-                        'questions': result.questions,
+                        'questions': result.question_ids,
                     }
                 )
             data = {
