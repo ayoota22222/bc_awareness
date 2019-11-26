@@ -285,3 +285,199 @@ class BcAwarness(http.Controller):
                 "data": {}
                 }
             return json.dumps(data)
+
+    @http.route(['/rest_api/questions/'], type='http', auth='none', csrf=False, methods=['GET'])
+    def get_parameters(self, **kw):
+        """Function TO Return questions"""
+
+        questions = http.request.env['bc.questions'].sudo().search([('id', '!=', False)])
+        if questions:
+            quest = []
+            for question in questions:
+                quest.append(
+                    {
+                        'id': question.id,
+                        'text': question.text,
+                        'key': question.key,
+                    }
+                )
+            data = {
+                "success": "true",
+                "message": "Data found",
+                "data": {
+                    "questions": quest,
+                }
+            }
+        else:
+            data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+            }
+        return json.dumps(data)
+
+    @http.route(['/rest_api/parameters/'], type='http', auth='none', csrf=False, methods=['GET'])
+    def get_parameters(self, **kw):
+        """Function TO Return Parameters"""
+
+        parameters = http.request.env['bc.parameters'].sudo().search([('id', '!=', False)])
+        if parameters:
+            parg = []
+            for parameter in parameters:
+                parg.append(
+                    {
+                        'id': parameter.id,
+                        'key': parameter.key,
+                        'description': parameter.description,
+                        'value': parameter.value,
+                    }
+                )
+            data = {
+                "success": "true",
+                "message": "Data found",
+                "data": {
+                    "Parameters": parg,
+                }
+            }
+        else:
+            data = {
+                "success": "false",
+                "message": "App Server Error, please contact the admin.",
+                "error_code": 1000,
+                "data": {}
+            }
+        return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/results'], type='http', auth='none', csrf=False, methods=['GET'])
+    def get_result(self, **kw):
+        """Function TO Return User Self result"""
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>hello")
+        results = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id']))])
+        if results:
+            reslt = []
+            for result in results:
+                reslt.append(
+                    {
+                        'id': result.id,
+                        'userId': result.user_id.id,
+                        'date': fields.Date.to_string(result.date),
+                        'time': result.time,
+                        'questions': result.questions,
+                    }
+                )
+            data = {
+                "success": "true",
+                "message": "Data found",
+                "data": {
+                    "results": reslt,
+                }
+            }
+        else:
+            data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+            }
+        return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/results'], type='http', auth='none', csrf=False, methods=['GET'])
+    def get_result(self, **kw):
+        """Function TO Return User Self result"""
+
+        results = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id']))])
+        if results:
+            reslt = []
+            for result in results:
+                reslt.append(
+                    {
+                        'id': result.id,
+                        'userId': result.user_id.id,
+                        'date': fields.Date.to_string(result.date),
+                        'time': result.time,
+                        'questions': result.questions,
+                    }
+                )
+            data = {
+                "success": "true",
+                "message": "Data found",
+                "data": {
+                    "results": reslt,
+                }
+            }
+        else:
+            data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+            }
+        return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/results'],type='http',auth='none',csrf=False,methods=['POST'])
+    def save_result(self, **kw):
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>hello iam new result")
+        create_result = http.request.env['bc.results'].sudo().create(
+            {
+                'user_id': int(kw['user_id']),
+                'date': fields.Date.from_string(kw['date']),
+                'time': kw['time'],
+                'questions': int(kw['period']),
+            })
+        if create_result:
+            data = {
+                "success": "true",
+                "message": "result created successfully",
+                "data": {
+                    "check": {
+                        'id': create_result.id,
+                        'userId': create_result.user_id.id,
+                        'date': fields.Date.to_string(create_result.date),
+                        'time': create_result.time,
+                        'questions': create_result.question_ids,
+                    }
+                }
+            }
+            return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['PUT'])
+    def update_result(self, **kw):
+        """Function TO Write User Self result"""
+
+        result = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id'])),
+                                                                     ('id', '=', int(kw['plan_id']))])
+        if result:
+            result.sudo().write({
+                'date': fields.Date.from_string(kw['date']),
+                'time': kw['time'],
+                'questions': int(kw['period']),
+            })
+            data = {
+                "success": "true",
+                "message": "Result updated successfully",
+                "data": {
+                    "check": {
+                        'id': result.id,
+                        'userId': result.user_id.id,
+                        'date': fields.Date.to_string(result.date),
+                        'time': result.time,
+                        'questions': result.question_ids,
+                    }
+                }
+            }
+            return json.dumps(data)
+
+    @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['DELETE'])
+    def unlink_result(self, **kw):
+        """Function TO Delete User result"""
+        result = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id'])),
+                                                                     ('id', '=', int(kw['result_id']))])
+        if result:
+            result.sudo().unlink()
+            data = {
+                "success": "true",
+                "message": "Result deleted successfully",
+                "data": {}
+                }
+            return json.dumps(data)
