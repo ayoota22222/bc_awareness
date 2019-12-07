@@ -8,6 +8,7 @@
     'description': "BC Awareness",
     'license':'LGPL-3',
     'data': [
+        'security/ir.model.access.csv',
     'views/bc_awareness_view.xml',
     ],
     'demo': [],

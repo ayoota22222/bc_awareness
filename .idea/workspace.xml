@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="88808b8b-74aa-426b-ac53-a2753593a8fe" name="Default Changelist" comment="">
+    <list default="true" id="88808b8b-74aa-426b-ac53-a2753593a8fe" name="Default Changelist" comment="[fix]get_questions">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bc_awareness/controllers/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/bc_awareness/controllers/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bc_awareness/views/partner_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bc_awareness/views/partner_view.xml" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,18 +13,23 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1S6j6JvcwW6Nvjplf6AnKTOe4rt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -42,6 +44,28 @@
       <option name="presentableId" value="Default" />
       <updated>1570894165394</updated>
     </task>
+    <task id="LOCAL-00001" summary="[fix]get_questions">
+      <created>1574774168219</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1574774168219</updated>
+    </task>
+    <task id="LOCAL-00002" summary="[fix]get_questions">
+      <created>1574774452591</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1574774452591</updated>
+    </task>
+    <task id="LOCAL-00003" summary="[fix]get_questions">
+      <created>1574777342947</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1574777342947</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -49,10 +73,16 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[fix]get_questions" />
+    <option name="LAST_COMMIT_MESSAGE" value="[fix]get_questions" />
   </component>
 </project>

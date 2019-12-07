@@ -1,0 +1,6 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_media_Users,bc,bc_awareness.model_bc_awareness_media,,True,True,True,True
+access_partner_Users,bc,base.model_res_partner,,True,True,True,True
+access_monogram_Users,bc,bc_awareness.model_bc_mammogram,,True,True,True,True
+access_user_Users,bc,base.model_res_users,,True,True,True,True
+access_user_attach,bc,base.model_ir_attachment,,True,True,True,True
