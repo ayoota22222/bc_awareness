@@ -185,8 +185,6 @@ class BcAwarness(http.Controller):
     @http.route(['/rest_api/users/<string:user_id>/reminders'], type='http', auth='none', csrf=False, methods=['POST'])
     def set_check_plan(self, **kw):
         """Function TO Add User Self Check Plan"""
-
-        #c= datetime.strptime(kw['date'], '%Y-%m-%d')
         check_plan = http.request.env['bc.self.check.plan'].sudo().create(
             {
                 'user_id': int(kw['user_id']),
@@ -194,6 +192,7 @@ class BcAwarness(http.Controller):
                 'time': kw['time'],
                 'period': int(kw['period']),
                 'cycle': int(kw['cycle']),
+                'guid': kw['guid'],
             })
         if check_plan:
             data = {
@@ -206,6 +205,7 @@ class BcAwarness(http.Controller):
                         'time': check_plan.time,
                         'period': check_plan.period,
                         'cycle': check_plan.cycle,
+                        'guid': check_plan.guid,
                     }
                 }
             }
@@ -226,6 +226,8 @@ class BcAwarness(http.Controller):
                         'time': plan.time,
                         'period': plan.period,
                         'cycle': plan.cycle,
+                        'guid': plan.guid,
+                        'ClientLastUpdate': fields.Date.to_string(plan.write_date),
                     }
                 )
             data = {
