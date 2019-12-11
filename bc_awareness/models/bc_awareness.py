@@ -40,6 +40,7 @@ class BcSelfCheckPlan(models.Model):
     time = fields.Char(string="Time")#fields.Float(string="Time")
     period = fields.Integer(string="Period")
     cycle = fields.Integer(string="Cycle")
+    guid = fields.Char(string="GUID")
 
 class Partner(models.Model):
     _inherit = 'res.partner'
