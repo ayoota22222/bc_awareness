@@ -52,6 +52,7 @@ class BcAwarness(http.Controller):
     def log_in(self, **kw):
         data = {}
         user = http.request.env['res.users'].sudo().search([('login','=',kw.get('email')),('password','=',kw.get('password'))])
+        print("dsddddddddddddddddd",user.password)
         if user:
             partner = user.partner_id
             data = {
