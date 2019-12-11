@@ -4,6 +4,8 @@ import json
 from odoo import fields, http, SUPERUSER_ID
 import base64
 from odoo.http import request
+from odoo.addons.auth_signup.models.res_users import SignupError
+
 
 class BcAwarness(http.Controller):
 
@@ -37,7 +39,6 @@ class BcAwarness(http.Controller):
                     "mobile":partner.mobile,
                     "birth_date":partner.birth_date,
                     "langauage":"en",
-                    "is_mobile_verified":"false",
                     "avatar":partner.url,
                 }}}
         else:
@@ -51,32 +52,54 @@ class BcAwarness(http.Controller):
     @http.route(['/rest_api/users/login'],type='http',auth='none',csrf=False,methods=['POST'])
     def log_in(self, **kw):
         data = {}
-        user = http.request.env['res.users'].sudo().search([('login','=',kw.get('email')),('password','=',kw.get('password'))])
-        print("dsddddddddddddddddd",user.password)
-        if user:
-            partner = user.partner_id
-            data = {
-                "success": "true",
-                "message": "User account has been created successfully, please check you email we sent to you verification link",
-                "data": {"user": {
-                    "id": user.id,
-                    "name": partner.name,
-                    "partner_id": partner.id,
-                    "email": partner.email,
-                    "country_code": "00249",
-                    "weight": partner.weight,
-                    "hieght": partner.height,
-                    "mobile": partner.mobile,
-                    "birth_date": partner.birth_date,
-                    "langauage": "en",
-                    "is_mobile_verified": "false",
-                    "avatar":partner.url
-                }}}
-        else:
+        db = http.request.env.cr.dbname
+        email = kw.get('email')
+        password = kw.get('password')
+        try:
+            uid = request.session.authenticate(db, email, password)
+            if uid:
+                user = http.request.env['res.users'].sudo().search([('id', '=', uid)])
+                if user:
+                    partner = user.partner_id
+                    data = {
+                        "success": "true",
+                        "message": "User account has been created successfully, please check you email we sent to you verification link",
+                        "data": {"user": {
+                            "id": user.id,
+                            "name": partner.name,
+                            "partner_id": partner.id,
+                            "email": partner.email,
+                            "country_code": "00249",
+                            "weight": partner.weight,
+                            "height": partner.height,
+                            "mobile": partner.mobile,
+                            "birth_date": partner.birth_date,
+                            "langauage": "en",
+                            "avatar":partner.url
+                        }}}
+        except:
             data = {
                 "success":"false","message":"Invalid Credentials.","error_code":1107,"data":{}
             }
         return json.dumps(data)
+
+    @http.route(['/rest_api/users/password'],type='http',auth='none',csrf=False,methods=['POST'])
+    def reset_password(self,**kw):
+        db = http.request.env.cr.dbname
+        email = kw.get('email')
+        password = kw.get('oldPassword')
+        try:
+            uid = request.session.authenticate(db, email, password)
+            if uid:
+                user = http.request.env['res.users'].sudo().search([('id', '=', uid)])
+                if user:
+                    user.sudo().write({'password': kw.get('newPassword')})
+                    return json.dumps({"success": "true", "message": "Your password have been updated",
+                                       "data": {"user": {"id": user.id, }}})
+        except:
+            return json.dumps({"success": "false", "message": "Not Found.", "error_code": 1105, "data": {}})
+
+
 
     @http.route(['/rest_api/users/reset'],type='http',auth='none',csrf=False,methods=['POST'])
     def reset_email(self,**kw):
@@ -106,14 +129,14 @@ class BcAwarness(http.Controller):
                     "name": partner.name,
                     "country_code": "00249",
                     "weight": partner.weight,
-                    "hieght": partner.height,
+                    "height": partner.height,
                     "mobile": partner.mobile,
                     "birth_date": partner.birth_date,
                     "langauage": "en",
                 }}}
             return json.dumps(data)
         else:
-            return json.dumps({"success": "false", "message": "Not*** Found.", "error_code": 1105, "data": {}})
+            return json.dumps({"success": "false", "message": "Not Found.", "error_code": 1105, "data": {}})
 
     @http.route(['/rest_api/users/<string:id>/image'], type='http', auth='none', csrf=False, methods=['PUT'])
     def get_profile(self, id,**kw):
@@ -145,7 +168,7 @@ class BcAwarness(http.Controller):
                     "name": partner.name,
                     "country_code": "00249",
                     "weight": partner.weight,
-                    "hieght": partner.height,
+                    "height": partner.height,
                     "mobile": partner.mobile,
                     "birth_date": partner.birth_date,
                     "langauage": "en",
