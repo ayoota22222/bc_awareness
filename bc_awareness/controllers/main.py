@@ -325,6 +325,7 @@ class BcAwarness(http.Controller):
                         'id': question.id,
                         'text': question.text,
                         'key': question.key,
+                        'ar_text':question.text_arb,
                     }
                 )
             data = {
@@ -418,13 +419,12 @@ class BcAwarness(http.Controller):
 
     @http.route(['/rest_api/users/<string:user_id>/results'],type='http',auth='none',csrf=False,methods=['POST'])
     def save_result(self, **kw):
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>hello iam new result")
         create_result = http.request.env['bc.results'].sudo().create(
             {
                 'user_id': int(kw['user_id']),
                 'date': fields.Date.from_string(kw['date']),
                 'time': kw['time'],
-                'questions': int(kw['period']),
+                'questions': [(6, 0, kw['questions'])],
             })
         if create_result:
             data = {
@@ -436,7 +436,7 @@ class BcAwarness(http.Controller):
                         'userId': create_result.user_id.id,
                         'date': fields.Date.to_string(create_result.date),
                         'time': create_result.time,
-                        'questions': create_result.question_ids,
+                        'questions': kw['questions'],
                     }
                 }
             }
@@ -452,7 +452,7 @@ class BcAwarness(http.Controller):
             result.sudo().write({
                 'date': fields.Date.from_string(kw['date']),
                 'time': kw['time'],
-                # 'questions': int(kw['period']),
+                'questions': [(6, 0, kw['questions'])],
             })
             data = {
                 "success": "true",
@@ -463,7 +463,7 @@ class BcAwarness(http.Controller):
                         'userId': result.user_id.id,
                         'date': fields.Date.to_string(result.date),
                         'time': result.time,
-                        # 'questions': result.question_ids,
+                        'questions': kw['questions'],
                     }
                 }
             }

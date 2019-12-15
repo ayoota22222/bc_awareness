@@ -113,6 +113,7 @@ class BcQuestions(models.Model):
 
     key = fields.Char(string="Key")
     text = fields.Char(string="Text")
+    text_arb = fields.Char(string="Arabic Text")
 
 
 class BcResults(models.Model):
