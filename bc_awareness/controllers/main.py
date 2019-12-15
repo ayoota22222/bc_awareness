@@ -38,7 +38,7 @@ class BcAwarness(http.Controller):
                     "hieght":partner.height,
                     "mobile":partner.mobile,
                     "birth_date":partner.birth_date,
-                    "langauage":"en",
+                    "lang":partner.lang,
                     "avatar":partner.url,
                 }}}
         else:
@@ -74,7 +74,7 @@ class BcAwarness(http.Controller):
                             "height": partner.height,
                             "mobile": partner.mobile,
                             "birth_date": partner.birth_date,
-                            "langauage": "en",
+                            "lang": partner.lang,
                             "avatar":partner.url
                         }}}
         except:
@@ -112,7 +112,7 @@ class BcAwarness(http.Controller):
             return json.dumps({"success": "false","message":"Not Found.","error_code":1105,"data":{} })
 
     @http.route(['/rest_api/users/<string:id>'], type='http', auth='none', csrf=False, methods=['PUT'])
-    def get_profile(self,id,**kw):
+    def get_profiles_data(self,id,**kw):
         user = http.request.env['res.users'].sudo().search([('id','=',id)])
         if user:
             partner = user.partner_id
@@ -132,7 +132,7 @@ class BcAwarness(http.Controller):
                     "height": partner.height,
                     "mobile": partner.mobile,
                     "birth_date": partner.birth_date,
-                    "langauage": "en",
+                    "lang":partner.lang ,
                 }}}
             return json.dumps(data)
         else:

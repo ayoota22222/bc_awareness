@@ -49,10 +49,11 @@ class Partner(models.Model):
     is_mobile_verified = fields.Boolean(string="Mobile Verified")
     weight = fields.Float(string="Weight")
     height = fields.Float(string="Height")
-    birth_date = fields.Date(string="Birth Date")
+    birth_date = fields.Char(string="Birth Date")
     password = fields.Char(string="Password")
     addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     url = fields.Char(string="url")
+    lang = fields.Char(string="Language")
 
     @api.model
     def create(self, vals):
