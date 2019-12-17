@@ -36,11 +36,12 @@ class BcSelfCheckPlan(models.Model):
     _name = 'bc.self.check.plan'
 
     user_id = fields.Many2one('res.users', string='User', copy=False)
-    date = fields.Date(string='Date')
-    time = fields.Char(string="Time")#fields.Float(string="Time")
-    period = fields.Integer(string="Period")
-    cycle = fields.Integer(string="Cycle")
-    guid = fields.Char(string="GUID")
+    date = fields.Char(string = 'Date')
+    time = fields.Char(string = 'Time')
+    duration = fields.Float(string = 'Duration')
+    period = fields.Integer(string = 'Period')
+    cycle = fields.Integer(string = 'Cycle')
+    guid = fields.Char(string = 'GUID')
 
 class Partner(models.Model):
     _inherit = 'res.partner'

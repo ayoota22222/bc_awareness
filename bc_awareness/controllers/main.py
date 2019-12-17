@@ -188,8 +188,9 @@ class BcAwarness(http.Controller):
         check_plan = http.request.env['bc.self.check.plan'].sudo().create(
             {
                 'user_id': int(kw['user_id']),
-                'date': fields.Date.from_string(kw['date']),
+                'date': kw['date'],
                 'time': kw['time'],
+                'duration': float(kw['duration']),
                 'period': int(kw['period']),
                 'cycle': int(kw['cycle']),
                 'guid': kw['guid'],
@@ -201,8 +202,9 @@ class BcAwarness(http.Controller):
                 "data": {
                     "scheduler": {
                         'id': check_plan.user_id.id,
-                        'date': fields.Date.to_string(check_plan.date),
+                        'date': check_plan.date,
                         'time': check_plan.time,
+                        'duration': check_plan.duration,
                         'period': check_plan.period,
                         'cycle': check_plan.cycle,
                         'guid': check_plan.guid,
@@ -222,8 +224,9 @@ class BcAwarness(http.Controller):
                 plns.append(
                     {
                         'id': plan.id,
-                        'date': fields.Date.to_string(plan.date),
+                        'date': plan.date,
                         'time': plan.time,
+                        'duration': plan.duration,
                         'period': plan.period,
                         'cycle': plan.cycle,
                         'guid': plan.guid,
@@ -254,8 +257,9 @@ class BcAwarness(http.Controller):
                                                                      ('id', '=', int(kw['plan_id']))])
         if plan:
             plan.sudo().write({
-                'date': fields.Date.from_string(kw['date']),
+                'date': kw['date'],
                 'time': kw['time'],
+                'duration': float(kw['duration']),
                 'period': int(kw['period']),
                 'cycle': int(kw['cycle']),
             })
@@ -265,8 +269,9 @@ class BcAwarness(http.Controller):
                 "data": {
                     "scheduler": {
                         'id': plan.id,
-                        'date': fields.Date.to_string(plan.date),
+                        'date': plan.date,
                         'time': plan.time,
+                        'duration': plan.duration,
                         'period': plan.period,
                         'cycle': plan.cycle,
                     }
