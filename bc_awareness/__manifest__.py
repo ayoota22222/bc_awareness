@@ -12,7 +12,7 @@
     'views/bc_awareness_view.xml',
     ],
     'demo': [],
-    'depends': [],
+    'depends': ['mail'],
     'images':[   ],
     'installable': True,
 }
