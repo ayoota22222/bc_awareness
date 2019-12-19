@@ -382,10 +382,10 @@ class BcAwarness(http.Controller):
         return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results'], type='http', auth='none', csrf=False, methods=['GET'])
-    def get_result(self, **kw):
+    def get_result(self, user_id,**kw):
         """Function TO Return User Self result"""
         quest = []
-        results = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id']))])
+        results = http.request.env['bc.results'].sudo().search([('user_id', '=', kw.get('user_id'))])
         if results:
             for question in results.questions:
                 quest.append(
@@ -423,13 +423,13 @@ class BcAwarness(http.Controller):
         return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results'],type='http',auth='none',csrf=False,methods=['POST'])
-    def save_result(self, **kw):
+    def save_result(self,user_id, **kw):
         create_result = http.request.env['bc.results'].sudo().create(
             {
-                'user_id': int(kw['user_id']),
-                'date': fields.Date.from_string(kw['date']),
-                'time': kw['time'],
-                'questions': [(6, 0, kw['questions'])],
+                'user_id': kw.get('user_id'),
+                'date': fields.Date.from_string(kw.get('date')),
+                'time': kw.get('time'),
+                'questions': [(6, 0, kw.get('questions'))],
             })
         if create_result:
             data = {
@@ -441,23 +441,23 @@ class BcAwarness(http.Controller):
                         'userId': create_result.user_id.id,
                         'date': fields.Date.to_string(create_result.date),
                         'time': create_result.time,
-                        'questions': kw['questions'],
+                        'questions': kw.get('questions'),
                     }
                 }
             }
             return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['PUT'])
-    def update_result(self, **kw):
+    def update_result(self, user_id,result_id,**kw):
         """Function TO Write User Self result"""
 
-        result = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id'])),
-                                                                     ('id', '=', int(kw['result_id']))])
+        result = http.request.env['bc.results'].sudo().search([('user_id', '=', kw.get('user_id')),
+                                                                     ('id', '=', kw.get('result_id'))])
         if result:
             result.sudo().write({
-                'date': fields.Date.from_string(kw['date']),
-                'time': kw['time'],
-                'questions': [(6, 0, kw['questions'])],
+                'date': fields.Date.from_string(kw.get('date')),
+                'time': kw.get('time'),
+                'questions': [(6, 0, kw.get('questions'))],
             })
             data = {
                 "success": "true",
@@ -468,17 +468,17 @@ class BcAwarness(http.Controller):
                         'userId': result.user_id.id,
                         'date': fields.Date.to_string(result.date),
                         'time': result.time,
-                        'questions': kw['questions'],
+                        'questions': kw.get('questions'),
                     }
                 }
             }
             return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['DELETE'])
-    def unlink_result(self, **kw):
+    def unlink_result(self, user_id,result_id,**kw):
         """Function TO Delete User result"""
-        result = http.request.env['bc.results'].sudo().search([('user_id', '=', int(kw['user_id'])),
-                                                                     ('id', '=', int(kw['result_id']))])
+        result = http.request.env['bc.results'].sudo().search([('user_id', '=', kw.get('user_id')),
+                                                                     ('id', '=', kw.get('result_id'))])
         if result:
             result.sudo().unlink()
             data = {
@@ -486,4 +486,11 @@ class BcAwarness(http.Controller):
                 "message": "Result deleted successfully",
                 "data": {}
                 }
+            return json.dumps(data)
+        else:
+            data = {
+                "success": "false",
+                "message": "Result Not deleted",
+                "data": {}
+            }
             return json.dumps(data)
