@@ -255,5 +255,26 @@
         </record>
 
         <menuitem id="bc_parameters_menu" name="Bc Parameters" sequence="2"  parent="bc_main_menu" action="bc_parameters_action"/>
+        <!---->
+        <record id="bc_questions_tree" model="ir.ui.view">
+            <field name="name">bc.questions.tree</field>
+            <field name="model">bc.questions</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="key"/>
+                    <field name="text"/>
+                    <field name="text_arb"/>
+                </tree>
+            </field>
+        </record>
+        <record id="bc_questions_action" model="ir.actions.act_window">
+            <field name="name">Bc Questions</field>
+            <field name="res_model">bc.questions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bc_questions_tree"/>
+        </record>
+
+        <menuitem id="bc_questions_menu" name="Bc Questions" sequence="3"  parent="bc_main_menu" action="bc_questions_action"/>
     </data>
 </odoo>

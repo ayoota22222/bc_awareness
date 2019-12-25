@@ -121,6 +121,6 @@ class BcResults(models.Model):
     _name = 'bc.results'
 
     user_id = fields.Many2one('res.users', string="User")
-    date = fields.Date(string='Date')
+    date = fields.Char(string='Date')
     time = fields.Char(string="Time")
     questions = fields.Many2many('bc.questions', string='Questions')

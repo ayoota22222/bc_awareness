@@ -423,13 +423,15 @@ class BcAwarness(http.Controller):
         return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results'],type='http',auth='none',csrf=False,methods=['POST'])
-    def save_result(self,user_id, **kw):
+    def save_result(self, **kw):
+        list_ids = list(kw.get('questions').split(","))
+        list_ids = http.request.env['bc.questions'].sudo().search([('id', 'in', list_ids)]).ids
         create_result = http.request.env['bc.results'].sudo().create(
             {
                 'user_id': kw.get('user_id'),
-                'date': fields.Date.from_string(kw.get('date')),
+                'date': kw.get('date'),
                 'time': kw.get('time'),
-                'questions': [(6, 0, kw.get('questions'))],
+                'questions': [(6, 0, list_ids)],
             })
         if create_result:
             data = {
@@ -439,25 +441,25 @@ class BcAwarness(http.Controller):
                     "check": {
                         'id': create_result.id,
                         'userId': create_result.user_id.id,
-                        'date': fields.Date.to_string(create_result.date),
+                        'date': create_result.date,
                         'time': create_result.time,
-                        'questions': kw.get('questions'),
+                        'questions': [re.id for re in create_result.questions],
                     }
                 }
             }
             return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['PUT'])
-    def update_result(self, user_id,result_id,**kw):
+    def update_result(self,**kw):
         """Function TO Write User Self result"""
-
-        result = http.request.env['bc.results'].sudo().search([('user_id', '=', kw.get('user_id')),
-                                                                     ('id', '=', kw.get('result_id'))])
+        result = http.request.env['bc.results'].sudo().search([('id', '=', kw.get('result_id'))])
         if result:
+            list_ids = list(kw.get('questions').split(","))
+            list_ids = http.request.env['bc.questions'].sudo().search([('id', 'in', list_ids)]).ids
             result.sudo().write({
-                'date': fields.Date.from_string(kw.get('date')),
+                'date': kw.get('date'),
                 'time': kw.get('time'),
-                'questions': [(6, 0, kw.get('questions'))],
+                'questions': [(6, 0, list_ids)],
             })
             data = {
                 "success": "true",
@@ -466,9 +468,9 @@ class BcAwarness(http.Controller):
                     "check": {
                         'id': result.id,
                         'userId': result.user_id.id,
-                        'date': fields.Date.to_string(result.date),
+                        'date': result.date,
                         'time': result.time,
-                        'questions': kw.get('questions'),
+                        'questions':  [re.id for re in result.questions],
                     }
                 }
             }
