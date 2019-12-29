@@ -492,10 +492,10 @@ class BcAwarness(http.Controller):
                 "data": {}
                 }
             return json.dumps(data)
-        # else:
-        #     data = {
-        #         "success": "false",
-        #         "message": "Result Not deleted",
-        #         "data": {}
-        #     }
+        else:
+            data = {
+                "success": "false",
+                "message": "Result Not deleted",
+                "data": {}
+            }
             return json.dumps(data)
