@@ -385,7 +385,7 @@ class BcAwarness(http.Controller):
     def get_result(self, user_id,**kw):
         """Function TO Return User Self result"""
         quest = []
-        user = http.request.env['res.users'].sudo().search([('id', '=', kw.get('user_id'))])
+        user = http.request.env['res.users'].sudo().search([('id', '=', user_id)])
         results = http.request.env['bc.results'].sudo().search([('user_id', '=', user.id)])
         if results:
             for res in results:
