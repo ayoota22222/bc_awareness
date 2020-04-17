@@ -55,32 +55,34 @@ class BcAwarness(http.Controller):
         db = http.request.env.cr.dbname
         email = kw.get('email')
         password = kw.get('password')
-        try:
-            uid = request.session.authenticate(db, email, password)
-            if uid:
-                user = http.request.env['res.users'].sudo().search([('id', '=', uid)])
-                if user:
-                    partner = user.partner_id
-                    data = {
-                        "success": "true",
-                        "message": "User account has been created successfully, please check you email we sent to you verification link",
-                        "data": {"user": {
-                            "id": user.id,
-                            "name": partner.name,
-                            "partner_id": partner.id,
-                            "email": partner.email,
-                            "country_code": "00249",
-                            "weight": partner.weight,
-                            "height": partner.height,
-                            "mobile": partner.mobile,
-                            "birth_date": partner.birth_date,
-                            "lang": partner.lang,
-                            "avatar":partner.url
-                        }}}
-        except:
+        # try:
+        uid = request.session.authenticate(db, email, password)
+        if not  uid:
             data = {
-                "success":"false","message":"Invalid Credentials.","error_code":1107,"data":{}
+                "success": "false", "message": "Invalid Credentials.", "error_code": 1107, "data": {}
             }
+        else:
+            user = http.request.env['res.users'].sudo().search([('id', '=', uid)])
+            if user:
+                partner = user.partner_id
+                data = {
+                    "success": "true",
+                    "message": "User account has been created successfully, please check you email we sent to you verification link",
+                    "data": {"user": {
+                        "id": user.id,
+                        "name": partner.name,
+                        "partner_id": partner.id,
+                        "email": partner.email,
+                        "country_code": "00249",
+                        "weight": partner.weight,
+                        "height": partner.height,
+                        "mobile": partner.mobile,
+                        "birth_date": partner.birth_date,
+                        "lang": partner.lang,
+                        "avatar":partner.url
+                    }}}
+        # except:
+
         return json.dumps(data)
 
     @http.route(['/rest_api/users/password'],type='http',auth='none',csrf=False,methods=['POST'])
