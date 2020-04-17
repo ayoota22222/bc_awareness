@@ -10,8 +10,8 @@ class BcAwarenessMedia(models.Model):
 
     title = fields.Char(string='Title', required=True)
     active = fields.Boolean(string='Active', default=True)
-    type = fields.Char(string='Type')
-    addons = fields.Binary(string='Addons', required=True)
+    type = fields.Selection(selection=[('info','Information'),('steps','Steps'),('video','video')],string='Type')
+    addons = fields.Binary(string='Addons' )
     addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     content = fields.Text(string="Content")
     url = fields.Char(string="url")
@@ -19,18 +19,24 @@ class BcAwarenessMedia(models.Model):
     @api.model
     def create(self,vals):
         res = super(BcAwarenessMedia,self).create(vals)
-        res.create_attache()
+        if res.addons:
+            res.create_attache()
         return res
 
+    @api.onchange('addons')
+    def change_image(self):
+        self.create_attache()
+
     def create_attache(self):
-        url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        new_attachment = self.env['ir.attachment'].create({
-            'name': self.title,
-            'res_name':self.title,
-            'datas': self.addons
-        })
-        self.addons_attache = new_attachment.id
-        self.url = url_base+"/web/content/%s"%(self.addons_attache.id)
+        if self.addons:
+            url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            new_attachment = self.env['ir.attachment'].create({
+                'name': self.title,
+                'res_name':self.title,
+                'datas': self.addons
+            })
+            self.addons_attache = new_attachment.id
+            self.url = url_base+"/web/content/%s"%(self.addons_attache.id)
 
 class BcSelfCheckPlan(models.Model):
     _name = 'bc.self.check.plan'

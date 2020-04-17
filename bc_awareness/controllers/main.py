@@ -201,7 +201,7 @@ class BcAwarness(http.Controller):
                     "id":rec.id,
                     "content":rec.content,"title":rec.title,
                     "type":rec.type,
-                    "addons":rec.url,
+                    "url":rec.url,
                 }
                 li.append(media)
             return json.dumps({"success":"true","message":"Data found","data":{"features":li}})
