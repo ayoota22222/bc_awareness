@@ -227,7 +227,7 @@ class BcAwarness(http.Controller):
                 "message": "Scheduler created successfully",
                 "data": {
                     "scheduler": {
-                        'id': check_plan.user_id.id,
+                        'id': check_plan.id,
                         'date': check_plan.date,
                         'time': check_plan.time,
                         'duration': check_plan.duration,
