@@ -178,8 +178,8 @@
                     <sheet>
                         <group>
                             <field name="user_id"/>
-                            <field name="date"  readonly="1"/>
-                            <field name="time"  readonly="1"/>
+                            <field name="date" />
+                            <field name="time"/>
                         </group>
                         <notebook>
                             <page string="Questions">
