@@ -67,7 +67,13 @@ class Partner(models.Model):
     def _compute_avatar(self):
         base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for u in self:
-            u.url = werkzeug.urls.url_join(base, 'web/content/%d' % u.id)
+            new_attachment = self.env['ir.attachment'].create({
+                'name': u.name,
+                'res_name':u.name,
+                'datas': u.image
+            })
+            u.addons_attache = new_attachment.id
+            u.url = werkzeug.urls.url_join(base, 'web/content/%d' % u.addons_attache.id)
 
     @api.model
     def create(self, vals):
