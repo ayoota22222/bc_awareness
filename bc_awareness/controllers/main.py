@@ -223,7 +223,7 @@ class BcAwarness(http.Controller):
                 'duration': float(kw['duration']),
                 'period': int(kw['period']),
                 'cycle': int(kw['cycle']),
-                'cycle': int(kw['cycle']),
+                'is_self_check': kw['is_self_check'],
                 'uuid': kw['uuid'],
             })
         if check_plan:
@@ -239,6 +239,7 @@ class BcAwarness(http.Controller):
                         'period': check_plan.period,
                         'cycle': check_plan.cycle,
                         'uuid': check_plan.uuid,
+                        'is_self_check': check_plan.is_self_check,
                     }
                 }
             }
