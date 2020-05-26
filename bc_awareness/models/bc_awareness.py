@@ -68,6 +68,10 @@ class Partner(models.Model):
         res = super(Partner, self).create(vals)
         res.create_attache()
         return res
+        
+    @api.onchange('image')
+    def change_image(self):
+        self.create_attache()
 
     def create_attache(self):
         url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
