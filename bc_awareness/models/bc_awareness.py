@@ -2,7 +2,7 @@
 
 from odoo import models,fields,api
 import base64
-
+import werkzeug
 
 class BcAwarenessMedia(models.Model):
     _name = 'bc.awareness.media'
@@ -60,28 +60,20 @@ class Partner(models.Model):
     birth_date = fields.Char(string="Birth Date")
     password = fields.Char(string="Password")
     addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
-    url = fields.Char(string="url")
     lang = fields.Char(string="Language")
+    url = fields.Char(string="url",compute='_compute_avatar')
+
+    @api.depends('image')
+    def _compute_avatar(self):
+        base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        for u in self:
+            u.url = werkzeug.urls.url_join(base, 'web/content/%d' % u.id)
 
     @api.model
     def create(self, vals):
         res = super(Partner, self).create(vals)
-        res.create_attache()
         return res
-        
-    @api.onchange('image')
-    def change_image(self):
-        self.create_attache()
 
-    def create_attache(self):
-        url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        new_attachment = self.env['ir.attachment'].create({
-            'name': self.name,
-            'res_name': self.name,
-            'datas': self.image
-        })
-        self.addons_attache = new_attachment.id
-        self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
 
 
 class BcMammogram(models.Model):
