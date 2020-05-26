@@ -215,6 +215,8 @@ class BcAwarness(http.Controller):
     @http.route(['/rest_api/users/<string:user_id>/reminders'], type='http', auth='none', csrf=False, methods=['POST'])
     def set_check_plan(self, **kw):
         """Function TO Add User Self Check Plan"""
+        is_check = kw.get('is_self_check', 'false')
+
         check_plan = http.request.env['bc.self.check.plan'].sudo().create(
             {
                 'user_id': int(kw['user_id']),
@@ -223,13 +225,14 @@ class BcAwarness(http.Controller):
                 'duration': float(kw['duration']),
                 'period': int(kw['period']),
                 'cycle': int(kw['cycle']),
-                'is_self_check': kw['is_self_check'],
+                'is_self_check': False if is_check == 'false' else True,
                 'uuid': kw['uuid'],
             })
         if check_plan:
             data = {
                 "success": "true",
                 "message": "Scheduler created successfully",
+
                 "data": {
                     "scheduler": {
                         'id': check_plan.id,
