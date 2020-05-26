@@ -423,11 +423,7 @@ class BcAwarness(http.Controller):
             for res in results:
                 for question in res.questions:
                     quest.append(
-                        {
-                            'id': question.id,
-                            'text': question.text,
-                            'key': question.key,
-                        }
+                        question.id
                     )
             reslt = []
             for result in results:
