@@ -272,6 +272,7 @@ class BcAwarness(http.Controller):
                         'period': plan.period,
                         'cycle': plan.cycle,
                         'uuid': plan.uuid,
+                        'is_self_check':plan.is_self_check,
                         'ClientLastUpdate': fields.Date.to_string(plan.write_date),
                     }
                 )
