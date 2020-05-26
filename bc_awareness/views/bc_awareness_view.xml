@@ -20,7 +20,7 @@
                         </div>
                         <group>
                             <group string="Personal Information">
-                                <field name="is_mobile_verified"/>
+                                <field name="has_family_history"/>
                                 <field name="bc_partner"/>
                                 <field name="birth_date"/>
                                 <field name="weight"/>
@@ -178,8 +178,8 @@
                     <sheet>
                         <group>
                             <field name="user_id"/>
-                            <field name="date"/>
-                            <field name="time"/>
+                            <field name="date"  readonly="1"/>
+                            <field name="time"  readonly="1"/>
                         </group>
                         <notebook>
                             <page string="Questions">
@@ -217,6 +217,53 @@
         </record>
 
         <menuitem id="bc_result_menu" name="Bc Result" sequence="2"  parent="bc_main_menu" action="bc_result_action"/>
+
+
+
+        <record id="bc_reminder_form" model="ir.ui.view">
+            <field name="name">bc.self.check.plan.form</field>
+            <field name="model">bc.self.check.plan</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="date"  readonly="1"/>
+                            <field name="time"  readonly="1"/>
+                            <field name="duration"  readonly="1"/>
+                            <field name="period"  readonly="1"/>
+                            <field name="cycle"  readonly="1"/>
+                            <field name="uuid"  readonly="1"/>
+                            <field name="is_self_check"  readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="bc_reminder_tree" model="ir.ui.view">
+            <field name="name">bc.self.check.plan.tree</field>
+            <field name="model">bc.self.check.plan</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="time"/>
+                    <field name="duration"/>
+                    <field name="period"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="bc_reminder_action" model="ir.actions.act_window">
+            <field name="name">Bc reminder</field>
+            <field name="res_model">bc.self.check.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="bc_reminder_tree"/>
+        </record>
+
+        <menuitem id="bc_reminder_menu" name="Bc reminder" sequence="2"  parent="bc_main_menu" action="bc_reminder_action"/>
+
 
 
         <!--parameters-->

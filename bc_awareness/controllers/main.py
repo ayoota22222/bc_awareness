@@ -17,7 +17,6 @@ class BcAwarness(http.Controller):
             values[field_name] = field_value
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
-            # values['bc_partner'] = True
             partner = http.request.env['res.partner'].sudo().create(values)
             user = http.request.env['res.users'].sudo().create({
                 'name': values['name'],
@@ -28,19 +27,7 @@ class BcAwarness(http.Controller):
             data = {
                 "success":"true",
                 "message":"User account has been created successfully, please check you email we sent to you verification link",
-                "data":{ "user":{
-                    "id":user.id,
-                    "name":partner.name,
-                    "partner_id":partner.id,
-                    "email":partner.email,
-                    "country_code":"00249",
-                    "weight":partner.weight,
-                    "hieght":partner.height,
-                    "mobile":partner.mobile,
-                    "birth_date":partner.birth_date,
-                    "lang":partner.lang,
-                    "avatar":partner.url,
-                }}}
+                "data":{}}
         else:
             data = {"success":"false",
                     "message":"'Your account already exist in the app, please try to login.",
@@ -79,7 +66,8 @@ class BcAwarness(http.Controller):
                         "mobile": partner.mobile,
                         "birth_date": partner.birth_date,
                         "lang": partner.lang,
-                        "avatar":partner.url
+                        "avatar":partner.url,
+                        "has_family_history":partner.has_family_history
                     }}}
         # except:
 
@@ -173,7 +161,8 @@ class BcAwarness(http.Controller):
                     "height": partner.height,
                     "mobile": partner.mobile,
                     "birth_date": partner.birth_date,
-                    "langauage": "en",
+                    "has_family_history": partner.has_family_history,
+                    "langauage": partner.lang,
                 }}}
             return json.dumps(data)
         else:
@@ -191,6 +180,13 @@ class BcAwarness(http.Controller):
                 li.append(mono)
             return json.dumps({"success":"true",
                                "message":"Data found","data":{"mammograms":li}})
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
 
     @http.route(['/rest_api/features'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_features(self, **kw):
@@ -207,6 +203,14 @@ class BcAwarness(http.Controller):
                 }
                 li.append(media)
             return json.dumps({"success":"true","message":"Data found","data":{"features":li}})
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
+
 
     @http.route(['/rest_api/users/<string:user_id>/reminders'], type='http', auth='none', csrf=False, methods=['POST'])
     def set_check_plan(self, **kw):
@@ -219,7 +223,8 @@ class BcAwarness(http.Controller):
                 'duration': float(kw['duration']),
                 'period': int(kw['period']),
                 'cycle': int(kw['cycle']),
-                'guid': kw['guid'],
+                'cycle': int(kw['cycle']),
+                'uuid': kw['uuid'],
             })
         if check_plan:
             data = {
@@ -233,11 +238,18 @@ class BcAwarness(http.Controller):
                         'duration': check_plan.duration,
                         'period': check_plan.period,
                         'cycle': check_plan.cycle,
-                        'guid': check_plan.guid,
+                        'uuid': check_plan.uuid,
                     }
                 }
             }
             return json.dumps(data)
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/shedulers'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_check_plan(self, **kw):
@@ -255,7 +267,7 @@ class BcAwarness(http.Controller):
                         'duration': plan.duration,
                         'period': plan.period,
                         'cycle': plan.cycle,
-                        'guid': plan.guid,
+                        'uuid': plan.uuid,
                         'ClientLastUpdate': fields.Date.to_string(plan.write_date),
                     }
                 )
@@ -304,6 +316,13 @@ class BcAwarness(http.Controller):
                 }
             }
             return json.dumps(data)
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/reminders/<string:plan_id>'], type='http', auth='none', csrf=False, methods=['DELETE'])
     def unlink_check_plan(self, **kw):
@@ -318,6 +337,13 @@ class BcAwarness(http.Controller):
                 "data": {}
                 }
             return json.dumps(data)
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
 
     @http.route(['/rest_api/questions/'], type='http', auth='none', csrf=False, methods=['GET'])
     def get_questions(self, **kw):
@@ -452,6 +478,13 @@ class BcAwarness(http.Controller):
                 }
             }
             return json.dumps(data)
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['PUT'])
     def update_result(self,**kw):
@@ -479,6 +512,13 @@ class BcAwarness(http.Controller):
                 }
             }
             return json.dumps(data)
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)
 
     @http.route(['/rest_api/users/<string:user_id>/results/<string:result_id>'], type='http', auth='none', csrf=False, methods=['DELETE'])
     def unlink_result(self,**kw):
@@ -501,3 +541,10 @@ class BcAwarness(http.Controller):
                 "data": {}
             }
             return json.dumps(data)
+        data = {
+                "success": "false",
+                "message": "Data not found",
+                "error_code": 1105,
+                "data": {}
+        }
+        return json.dumps(data)

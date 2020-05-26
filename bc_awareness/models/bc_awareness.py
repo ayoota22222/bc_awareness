@@ -47,13 +47,14 @@ class BcSelfCheckPlan(models.Model):
     duration = fields.Float(string = 'Duration')
     period = fields.Integer(string = 'Period')
     cycle = fields.Integer(string = 'Cycle')
-    guid = fields.Char(string = 'GUID')
+    uuid = fields.Char(string = 'UUID')
+    is_self_check = fields.Boolean(string='Its self check', default=True)
 
 class Partner(models.Model):
     _inherit = 'res.partner'
 
     bc_partner = fields.Boolean(string="BC Partner")
-    is_mobile_verified = fields.Boolean(string="Mobile Verified")
+    has_family_history = fields.Boolean(string="Has family history")
     weight = fields.Float(string="Weight")
     height = fields.Float(string="Height")
     birth_date = fields.Char(string="Birth Date")
