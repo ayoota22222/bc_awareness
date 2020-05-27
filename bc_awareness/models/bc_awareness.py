@@ -69,8 +69,9 @@ class Partner(models.Model):
     def _compute_avatar(self):
         base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for u in self:
-            u.url = werkzeug.urls.url_join(base, 'web/avatar/%d' % u._origin.id)
-            
+            if isinstance(u.id, int):
+                u.url = werkzeug.urls.url_join(base, 'web/avatar/%d' % u.id)
+                
 
 class BcMammogram(models.Model):
     _name = 'bc.mammogram'
