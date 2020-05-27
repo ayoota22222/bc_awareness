@@ -3,11 +3,10 @@ import base64
 import odoo
 from odoo import http
 from odoo.http import request
-import os
 
 import logging
 _logger = logging.getLogger(__name__)
-addons_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+from ..util import util
 
 class WebController(http.Controller):
 
@@ -60,6 +59,6 @@ class WebController(http.Controller):
             return response
 
     def placeholder(self, image='no_image.gif'):
-        return open(os.path.join(addons_path, 'bc_awareness', 'static', 'img', image), 'rb').read()
+        return open(util.path('bc_awareness', 'static', 'img', image), 'rb').read()
     
     
