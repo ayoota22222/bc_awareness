@@ -60,15 +60,17 @@ class Partner(models.Model):
     birth_date = fields.Char(string="Birth Date")
     password = fields.Char(string="Password")
     lang = fields.Char(string="Language")
-    url = fields.Char(string="url",compute='_compute_avatar')
+    url = fields.Char(string="url",)
 
-    @api.depends('image')
+    @api.onchange('image')
+    def change_image(self):
+        self._compute_avatar()
+
     def _compute_avatar(self):
         base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for u in self:
             u.url = werkzeug.urls.url_join(base, 'web/avatar/%d' % u._origin.id)
-
-
+            
 
 class BcMammogram(models.Model):
     _name = 'bc.mammogram'
@@ -87,15 +89,20 @@ class BcMammogram(models.Model):
         res.create_attache()
         return res
 
+    @api.onchange('avatar')
+    def change_url(self):
+        self.create_attache()
+
     def create_attache(self):
-        url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        new_attachment = self.env['ir.attachment'].create({
-            'name': self.name,
-            'res_name': self.name,
-            'datas': self.avatar
-        })
-        self.addons_attache = new_attachment.id
-        self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
+        if self.avatar:
+            url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            new_attachment = self.env['ir.attachment'].create({
+                'name': self.name,
+                'res_name': self.name,
+                'datas': self.avatar
+            })
+            self.addons_attache = new_attachment.id
+            self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
 
 
 class BcParameters(models.Model):

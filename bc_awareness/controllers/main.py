@@ -5,6 +5,8 @@ from odoo import fields, http, SUPERUSER_ID
 import base64
 from odoo.http import request
 from odoo.addons.auth_signup.models.res_users import SignupError
+import werkzeug
+
 
 
 class BcAwarness(http.Controller):
@@ -17,6 +19,7 @@ class BcAwarness(http.Controller):
             values[field_name] = field_value
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
+            values['bc_partner'] = True
             partner = http.request.env['res.partner'].sudo().create(values)
             user = http.request.env['res.users'].sudo().create({
                 'name': values['name'],
@@ -133,7 +136,15 @@ class BcAwarness(http.Controller):
         user = http.request.env['res.users'].sudo().search([('id','=',id)])
         if user:
             partner = user.partner_id
-            partner.sudo().write({'image':base64.encodebytes(kw.get('image').read())})
+            base = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            new_attachment = request.env['ir.attachment'].sudo().create({
+                'name': partner.name,
+                'res_name': partner.name,
+                'datas':base64.encodebytes(kw.get('image').read())
+            })
+            addons_attache = new_attachment.id
+            url = werkzeug.urls.url_join(base, 'web/content/%d' % addons_attache)
+            partner.sudo().write({'image':base64.encodebytes(kw.get('image').read()),'url':url,'addons_attache':addons_attache})
             data = {
                 "success": "true",
                 "message": "User information has been updated successfully",
