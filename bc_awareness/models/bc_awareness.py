@@ -61,23 +61,29 @@ class Partner(models.Model):
     password = fields.Char(string="Password")
     addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     lang = fields.Char(string="Language")
-    url = fields.Char(string="url",compute='_compute_avatar')
+    url = fields.Char(string="url",)
 
-    @api.depends('image')
+    @api.onchange('image')
+    def change_image(self):
+        self._compute_avatar()
+
     def _compute_avatar(self):
         base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for u in self:
-            new_attachment = self.env['ir.attachment'].create({
-                'name': u.name,
-                'res_name':u.name,
-                'datas': u.image
-            })
-            u.addons_attache = new_attachment.id
-            u.url = werkzeug.urls.url_join(base, 'web/content/%d' % u.addons_attache.id)
+            if self.image:
+                new_attachment = self.env['ir.attachment'].sudo().create({
+                    'name': u.name,
+                    'res_name':u.name,
+                    'datas': u.image
+                })
+                u.addons_attache = new_attachment.id
+                u.url = werkzeug.urls.url_join(base, 'web/content/%d' % u.addons_attache.id)
 
     @api.model
     def create(self, vals):
         res = super(Partner, self).create(vals)
+        if res.image:
+            res._compute_avatar()
         return res
 
 
@@ -99,15 +105,20 @@ class BcMammogram(models.Model):
         res.create_attache()
         return res
 
+    @api.onchange('avatar')
+    def change_url(self):
+        self.create_attache()
+
     def create_attache(self):
-        url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        new_attachment = self.env['ir.attachment'].create({
-            'name': self.name,
-            'res_name': self.name,
-            'datas': self.avatar
-        })
-        self.addons_attache = new_attachment.id
-        self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
+        if self.avatar:
+            url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            new_attachment = self.env['ir.attachment'].create({
+                'name': self.name,
+                'res_name': self.name,
+                'datas': self.avatar
+            })
+            self.addons_attache = new_attachment.id
+            self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
 
 
 class BcParameters(models.Model):
