@@ -59,7 +59,6 @@ class Partner(models.Model):
     height = fields.Float(string="Height")
     birth_date = fields.Char(string="Birth Date")
     password = fields.Char(string="Password")
-    addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     lang = fields.Char(string="Language")
     url = fields.Char(string="url",compute='_compute_avatar')
 
@@ -67,18 +66,7 @@ class Partner(models.Model):
     def _compute_avatar(self):
         base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for u in self:
-            new_attachment = self.env['ir.attachment'].create({
-                'name': u.name,
-                'res_name':u.name,
-                'datas': u.image
-            })
-            u.addons_attache = new_attachment.id
-            u.url = werkzeug.urls.url_join(base, 'web/content/%d' % u.addons_attache.id)
-
-    @api.model
-    def create(self, vals):
-        res = super(Partner, self).create(vals)
-        return res
+            u.url = werkzeug.urls.url_join(base, 'web/avatar/%d' % u._origin.id)
 
 
 
