@@ -141,8 +141,10 @@
                     <sheet>
                         <group>
                             <field name="title"/>
+                            <field name="title_ar"/>
                             <field name="type"/>
                             <field name="content"/>
+                            <field name="content_ar"/>
 <!--                            <field name="addons"/>-->
                             <field name="url"/>
                         </group>

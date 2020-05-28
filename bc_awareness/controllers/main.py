@@ -214,7 +214,10 @@ class BcAwarness(http.Controller):
             for rec in record:
                 media = {
                     "id":rec.id,
-                    "content":rec.content,"title":rec.title,
+                    "content":rec.content,
+                    "title":rec.title,
+                    "content_ar":rec.content_ar,
+                    "title_ar":rec.title_ar,
                     "type":rec.type,
                     "url":rec.url,
                 }

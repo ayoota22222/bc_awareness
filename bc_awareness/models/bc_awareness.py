@@ -9,11 +9,13 @@ class BcAwarenessMedia(models.Model):
     _rec_name = 'title'
 
     title = fields.Char(string='Title', required=True)
+    title_ar = fields.Char(string='Title', required=True)
     active = fields.Boolean(string='Active', default=True)
     type = fields.Selection(selection=[('info','Information'),('steps','Steps'),('video','video')],string='Type')
     # addons = fields.Binary(string='Addons' )
     # addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     content = fields.Text(string="Content")
+    content_ar = fields.Text(string="Arabic content")
     url = fields.Char(string="url")
 
     # @api.model
