@@ -11,32 +11,32 @@ class BcAwarenessMedia(models.Model):
     title = fields.Char(string='Title', required=True)
     active = fields.Boolean(string='Active', default=True)
     type = fields.Selection(selection=[('info','Information'),('steps','Steps'),('video','video')],string='Type')
-    addons = fields.Binary(string='Addons' )
-    addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
+    # addons = fields.Binary(string='Addons' )
+    # addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     content = fields.Text(string="Content")
     url = fields.Char(string="url")
 
-    @api.model
-    def create(self,vals):
-        res = super(BcAwarenessMedia,self).create(vals)
-        if res.addons:
-            res.create_attache()
-        return res
+    # @api.model
+    # def create(self,vals):
+    #     res = super(BcAwarenessMedia,self).create(vals)
+    #     if res.addons:
+    #         res.create_attache()
+    #     return res
 
-    @api.onchange('addons')
-    def change_image(self):
-        self.create_attache()
+    # @api.onchange('addons')
+    # def change_image(self):
+    #     self.create_attache()
 
-    def create_attache(self):
-        if self.addons:
-            url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_attachment = self.env['ir.attachment'].create({
-                'name': self.title,
-                'res_name':self.title,
-                'datas': self.addons
-            })
-            self.addons_attache = new_attachment.id
-            self.url = url_base+"/web/content/%s"%(self.addons_attache.id)
+    # def create_attache(self):
+    #     if self.addons:
+    #         url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+    #         new_attachment = self.env['ir.attachment'].create({
+    #             'name': self.title,
+    #             'res_name':self.title,
+    #             'datas': self.addons
+    #         })
+    #         self.addons_attache = new_attachment.id
+    #         self.url = url_base+"/web/content/%s"%(self.addons_attache.id)
 
 class BcSelfCheckPlan(models.Model):
     _name = 'bc.self.check.plan'
@@ -59,8 +59,10 @@ class Partner(models.Model):
     height = fields.Float(string="Height")
     birth_date = fields.Char(string="Birth Date")
     password = fields.Char(string="Password")
-    lang = fields.Char(string="Language")
+    langs = fields.Char(string="Language")
     url = fields.Char(string="url",)
+    addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
+
 
     @api.onchange('image')
     def change_image(self):
@@ -83,6 +85,16 @@ class BcMammogram(models.Model):
     avatar = fields.Binary(string="Avatar")
     addons_attache = fields.Many2one('ir.attachment',string='Addons Attache')
     url = fields.Char(string="url")
+    image_medium = fields.Binary("Medium-sized image", attachment=True,
+                                 help="Medium-sized image of this contact. It is automatically " \
+                                      "resized as a 128x128px image, with aspect ratio preserved. " \
+                                      "Use this field in form views or some kanban views.")
+    image_small = fields.Binary("Small-sized image", attachment=True,
+                                help="Small-sized image of this contact. It is automatically " \
+                                     "resized as a 64x64px image, with aspect ratio preserved. " \
+                                     "Use this field anywhere a small image is required.")
+
+    # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
 
     @api.model
     def create(self, vals):
@@ -97,13 +109,14 @@ class BcMammogram(models.Model):
     def create_attache(self):
         if self.avatar:
             url_base = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            new_attachment = self.env['ir.attachment'].create({
+            self.addons_attache = False
+            new_attachment = self.env['ir.attachment'].sudo().create({
                 'name': self.name,
                 'res_name': self.name,
                 'datas': self.avatar
             })
             self.addons_attache = new_attachment.id
-            self.url = url_base + "/web/content/%s" % (self.addons_attache.id)
+            self.url = url_base + "/web/content/%s" % (new_attachment.id)
 
 
 class BcParameters(models.Model):

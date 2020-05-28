@@ -16,7 +16,10 @@ class BcAwarness(http.Controller):
         values = {}
         data = {}
         for field_name, field_value in kw.items():
-            values[field_name] = field_value
+            if field_name != 'lang':
+                values[field_name] = field_value
+            if field_name == 'lang':
+                values['langs'] = field_value
         exist = http.request.env['res.partner'].sudo().search([('email','=',values['email'])])
         if not exist:
             values['bc_partner'] = True
@@ -68,7 +71,7 @@ class BcAwarness(http.Controller):
                         "height": partner.height,
                         "mobile": partner.mobile,
                         "birth_date": partner.birth_date,
-                        "lang": partner.lang,
+                        "lang": partner.langs,
                         "avatar":partner.url,
                         "has_family_history":partner.has_family_history
                     }}}
@@ -111,7 +114,10 @@ class BcAwarness(http.Controller):
             partner = user.partner_id
             values = {}
             for field_name, field_value in kw.items():
-                values[field_name] = field_value
+                if field_name != 'lang':
+                    values[field_name] = field_value
+                if field_name == 'lang':
+                    values['langs'] = field_value
             record = http.request.env['res.partner'].sudo().search([('id', '=',partner.id)])
             record.sudo().write(values)
             data = {
@@ -125,7 +131,7 @@ class BcAwarness(http.Controller):
                     "height": partner.height,
                     "mobile": partner.mobile,
                     "birth_date": partner.birth_date,
-                    "lang":partner.lang ,
+                    "lang":partner.langs ,
                 }}}
             return json.dumps(data)
         else:
@@ -173,7 +179,7 @@ class BcAwarness(http.Controller):
                     "mobile": partner.mobile,
                     "birth_date": partner.birth_date,
                     "has_family_history": partner.has_family_history,
-                    "langauage": partner.lang,
+                    "langauage": partner.langs,
                 }}}
             return json.dumps(data)
         else:

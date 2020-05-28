@@ -45,7 +45,7 @@ class WebController(http.Controller):
                         content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', avoid_if_small=True)
                 image_base64 = base64.b64decode(content)
             else:
-                image_base64 = self.placeholder() 
+                image_base64 = self.placeholder()
                 mimetype = 'image/gif'
         except Exception as ex:
             image_base64 = base64.b64decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')
@@ -60,5 +60,51 @@ class WebController(http.Controller):
 
     def placeholder(self, image='no_image.gif'):
         return open(util.path('bc_awareness', 'static', 'img', image), 'rb').read()
-    
-    
+
+    @http.route([
+        '/web/monogram/avatar/<int:id>',
+        '/web/monogram/avatar<int:id>/<string:size>'
+    ], auth='public', csrf=False, cors='*')
+    def monogram_avatar(self, id=None, size='small', **kw):
+        headers = []
+        try:
+            monogram = request.env['bc.mammogram'].sudo().browse(id)
+            content = None
+            mimetype = None
+            if monogram:
+                field_size = 'image'
+                resize = True
+                if size in ['medium', 'small']:
+                    field_size = '%s_%s' % (field_size, size)
+                    resize = False
+                attachment = monogram.addons_attache
+                content = attachment.datas
+                if attachment.exists():
+                    mimetype = attachment.mimetype
+            if content and mimetype:
+                if resize:
+                    if size == 'large':
+                        width, height = (500, 500)
+                    else:
+                        width = None
+                        height = None
+                    if width:
+                        content = odoo.tools.image_resize_image(base64_source=base64.b64encode(content.read()),
+                                                                size=(width or None, height or None), encoding='base64',
+                                                                avoid_if_small=True)
+                image_base64 = base64.b64decode(content)
+            else:
+                image_base64 = self.placeholder()
+                mimetype = 'image/gif'
+        except Exception as ex:
+            image_base64 = base64.b64decode('R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')
+            mimetype = 'image/gif'
+            _logger.error(str(ex))
+        finally:
+            headers.append(('Content-Length', len(image_base64)))
+            headers.append(('Content-Type', mimetype))
+            response = request.make_response(image_base64, headers)
+            response.status_code = 200
+            return response
+
+
