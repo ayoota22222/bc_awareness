@@ -103,7 +103,7 @@
                             <field name="city"/>
                             <field name="state"/>
                             <field name="avatar"/>
-                            <field name="addons_attache"/>
+                            <field name="addons_attache" invisible="1"/>
                             <field name="url"/>
                         </group>
                     </sheet>
