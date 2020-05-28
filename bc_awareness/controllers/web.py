@@ -59,6 +59,8 @@ class WebController(http.Controller):
             return response
 
     def placeholder(self, image='no_image.gif'):
+        _logger.info("====================")
+        _logger.info(util.path('bc_awareness', 'static', 'img', image))
         return open(util.path('bc_awareness', 'static', 'img', image), 'rb').read()
     
     
